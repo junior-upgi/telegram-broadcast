@@ -63,6 +63,7 @@ dist/
 public/
 deprecated/
 reference/
-src/config/
+src/backend/config/
+src/frontend/config/
 
 .db
