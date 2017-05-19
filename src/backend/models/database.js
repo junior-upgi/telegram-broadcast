@@ -24,9 +24,13 @@ const sqliteConfig = { // connection object for sqlite database
 };
 const sequelize = new Sequelize(sqliteConfig);
 
-db.Authorizations = require('./authorizations.js')(sequelize, Sequelize);
+db.APISubscriptions = require('./apiSubscriptions.js')(sequelize, Sequelize);
+db.Users = require('./users.js')(sequelize, Sequelize);
 db.initialize = () => {
-    return db.Authorizations.sync();
+    return Promise.all([
+        db.APISubscriptions.sync({ refresh: true }),
+        db.Users.sync({ refresh: true })
+    ]);
 };
 
 db.sequelize = sequelize;

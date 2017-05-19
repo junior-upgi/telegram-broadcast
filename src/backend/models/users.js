@@ -1,18 +1,25 @@
 module.exports = (sequelize, DataTypes) => {
-    const Authorizations = sequelize.define('authorizations', {
-        loginId: {
-            type: DataTypes.STRING,
+    const Users = sequelize.define('users', {
+        id: {
+            type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
         },
-        password: {
+        first_name: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        reference: {
+        last_name: {
             type: DataTypes.STRING,
-            unique: true,
-            allowNull: true
+            allowNull: false
+        },
+        username: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        language_code: {
+            type: DataTypes.STRING,
+            allowNull: false
         },
         createdAt: {
             type: DataTypes.DATE,
@@ -30,9 +37,9 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         name: {
-            singular: 'authorization',
-            plural: 'authorizations'
+            singular: 'user',
+            plural: 'users'
         }
     });
-    return Authorizations;
+    return Users;
 };

@@ -1,9 +1,6 @@
-import dotenv from 'dotenv';
 import fs from 'fs';
 import moment from 'moment-timezone';
 import winston from 'winston';
-
-dotenv.config();
 
 const loggingDirectory = 'logs';
 

@@ -1,14 +1,16 @@
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+
+import logger from '../utilities/logger.js';
 
 dotenv.config();
 
 module.exports = (request, response, next) => {
     if (process.env.VALIDATE !== 'enforced') {
-        console.log('依目前設定系統即將跳過 jsonwebtoken 認證機制(請確認是否正確配置 \'VALIDATE=enforced\')');
+        logger.warn('依目前設定系統即將跳過 jsonwebtoken 認證機制(請確認是否正確配置 \'VALIDATE=enforced\')');
         next();
     } else {
-        console.log('針對 jsonwebtoken 進行認證');
+        logger.info('針對 jsonwebtoken 進行認證');
         let accessToken =
             (request.body && request.body.accessToken) ||
             (request.query && request.query.accessToken) ||
@@ -22,7 +24,7 @@ module.exports = (request, response, next) => {
                         message: `${response.statusCode} Unauthorized (Unauthorized Token)`
                     });
                 }
-                console.log('認證通過...');
+                logger.info('認證通過...');
                 next();
             });
         } else { // if there is no token, return an error

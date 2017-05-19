@@ -7,6 +7,7 @@ import path from 'path';
 
 import db from './models/database.js';
 import logger from './utilities/logger.js';
+import telegram from './telegram.js';
 
 dotenv.config(); // loads .env file from root of project
 
@@ -61,6 +62,7 @@ db.initialize().then(() => { // initialize database
             logger.error(`${process.env.SYS_REF}啟動程序發生異常: ${error}`);
         }
         logger.info(`${process.env.SYS_REF}系統正確啟動 (${process.env.BASE_URL}:${process.env.PORT})...`);
+        telegram.checkRegistration().start();
     });
 }).catch((error) => {
     logger.error(`${process.env.SYS_REF} server could not initialize database: ${error}`);
