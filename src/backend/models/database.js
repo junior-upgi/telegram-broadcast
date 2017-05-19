@@ -4,8 +4,9 @@ import Sequelize from 'sequelize';
 
 import logger from '../utilities/logger.js';
 
-dotenv.config();
+dotenv.config(); // should not be removed
 
+const resetDatabase = process.env.ENV === 'production' ? false : true;
 const db = {}; // global database access object
 const sqliteConfig = { // connection object for sqlite database
     dialect: 'sqlite',
@@ -28,8 +29,8 @@ db.APISubscriptions = require('./apiSubscriptions.js')(sequelize, Sequelize);
 db.Users = require('./users.js')(sequelize, Sequelize);
 db.initialize = () => {
     return Promise.all([
-        db.APISubscriptions.sync({ refresh: true }),
-        db.Users.sync({ refresh: true })
+        db.APISubscriptions.sync({ force: resetDatabase }),
+        db.Users.sync({ force: resetDatabase })
     ]);
 };
 
