@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "message broadcasting web service to interface with Telegram bot API",
   "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chiayutsaipersonal/telegram-broadcast.git"
@@ -28,6 +25,7 @@
     "moment-timezone": "^0.5.13",
     "mssql": "^4.0.4",
     "node-cron": "^1.1.3",
+    "prompt": "^1.0.0",
     "sequelize": "^3.30.4",
     "sqlite3": "^3.1.8",
     "winston": "^2.3.1"
@@ -49,5 +47,20 @@
     "npm-run-all": "^4.0.2",
     "onchange": "^3.2.1",
     "rimraf": "^2.6.1"
+  },
+  "scripts": {
+    "template:remove": "rimraf public && mkdir public && cd public && mkdir partials && mkdir layouts",
+    "template:copy": "cpx src/backend/views/*.hbs public && cpx src/backend/views/layouts/*.hbs public/layouts && cpx src/backend/views/partials/*.hbs public/partials",
+    "template:refresh": "run-s template:remove template:copy",
+    "template:watch": "onchange \"src/backend/views/**/*.hbs\" -- npm run \"template:refresh\"",
+    "template:service": "run-s template:refresh template:watch",
+    "server:remove": "rimraf build && mkdir build",
+    "server:lint": "eslint --color --ext .js src/backend",
+    "server:transpile": "babel src/backend -d build",
+    "server:prepare": "run-s server:remove server:lint server:transpile",
+    "server:retranspile": "babel -w src/backend -d build",
+    "server:restart": "cross-env NODE_ENV=development nodemon --watch build --exec \"node build/server.js\"",
+    "server:watch": "run-p server:retranspile server:restart template:service",
+    "start:dev:server": "run-s server:prepare server:watch"
   }
 }

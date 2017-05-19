@@ -1,0 +1,18 @@
+<form action="http://localhost:9009/telegramBroadcast/regReq" method="post" onsubmit="processForm()">
+    <h3>申請 {{title}} 服務</h3>
+    稱號: <input type="text" name="reference" required>
+    <br>帳號: <input type="text" name="loginId" minlength="8" required>
+    <br>密碼: <input type="password" name="password" minlength="8" required>
+    <br><br>
+    <input id="submitButton" type="submit" value="申請">
+    <input type="reset" value="重設">
+</form>
+<div id="message" style="display:none;">請聯繫 {{title}} 系統管理員處理帳號申請</div>
+
+<script language="javascript">
+    function processForm() {
+        document.getElementById('submitButton').disabled = true;
+        document.getElementById('message').style.display = 'block';
+    }
+
+</script>

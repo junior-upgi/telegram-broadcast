@@ -9,8 +9,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        description: {
+        reference: {
             type: DataTypes.STRING,
+            unique: true,
             allowNull: true
         },
         createdAt: {

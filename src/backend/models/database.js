@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
 
@@ -27,7 +26,7 @@ const sequelize = new Sequelize(sqliteConfig);
 
 db.Authorizations = require('./authorizations.js')(sequelize, Sequelize);
 db.initialize = () => {
-    return db.Authorizations.sync({ force: true });
+    return db.Authorizations.sync();
 };
 
 db.sequelize = sequelize;
