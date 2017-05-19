@@ -32,7 +32,7 @@ if (process.env.ENV === 'production') {
 
 app.listen(process.env.PORT, (error) => { // start app
     if (error) {
-        console.log();
+        logger.error(`${process.env.SYS_REF}啟動程序發生異常: ${error}`);
     }
-    console.log();
+    logger.info(`${process.env.SYS_REF}系統正確啟動 (${process.env.BASE_URL}:${process.env.PORT})...`);
 });
