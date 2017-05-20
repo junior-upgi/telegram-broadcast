@@ -55,15 +55,18 @@ app.set('partials', path.join(__dirname, '/../public/partials'));
 main.use('/', require('./routes/views.js'));
 main.use('/', require('./routes/accounts.js'));
 main.use('/', require('./routes/token.js'));
+main.use('/', require('./routes/messaging.js'));
 
 db.initialize().then(() => { // initialize database
-    telegram.scheduledUpdateProcessing.start(); // start user registration processor
+    telegram.processUpdates(); // process user registration information once
+    telegram.scheduledJobs.processUpdates.start(); // start user registration processor
+    telegram.scheduledJobs.broadcast.start(); // start broadcasting
     app.listen(process.env.PORT, (error) => { // start app
         if (error) {
             logger.error(`${process.env.SYS_REF}啟動程序發生異常: ${error}`);
         }
         logger.info(`${process.env.SYS_REF}系統正確啟動 (${process.env.BASE_URL}:${process.env.PORT})...`);
     });
-}).catch((error) => {
+}).catch((error) => { // database init failure
     logger.error(`${process.env.SYS_REF} server could not initialize database: ${error}`);
 });
