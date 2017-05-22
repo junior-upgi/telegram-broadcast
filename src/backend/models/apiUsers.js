@@ -1,18 +1,22 @@
 module.exports = (sequelize, DataTypes) => {
-    const APISubscriptions = sequelize.define('apiSubscriptions', {
+    const APIUsers = sequelize.define('apiUsers', {
+        reference: {
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: true
+        },
         loginId: {
             type: DataTypes.STRING,
             allowNull: false,
             primaryKey: true
         },
-        password: {
+        passwordHash: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        reference: {
+        salt: {
             type: DataTypes.STRING,
-            unique: true,
-            allowNull: true
+            allowNull: false
         },
         createdAt: {
             type: DataTypes.DATE,
@@ -30,9 +34,9 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         name: {
-            singular: 'apiSubscription',
-            plural: 'apiSubscriptions'
+            singular: 'apiUser',
+            plural: 'apiUsers'
         }
     });
-    return APISubscriptions;
+    return APIUsers;
 };

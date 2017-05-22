@@ -7,7 +7,7 @@ import path from 'path';
 
 import db from './models/database.js';
 import logger from './utilities/logger.js';
-import telegram from './telegram.js';
+import broadcast from './broadcast.js';
 
 dotenv.config(); // loads .env file from root of project
 
@@ -53,14 +53,14 @@ app.set('layouts', path.join(__dirname, '/../public/layouts'));
 app.set('partials', path.join(__dirname, '/../public/partials'));
 
 main.use('/', require('./routes/views.js'));
-main.use('/', require('./routes/accounts.js'));
+main.use('/', require('./routes/registration.js'));
 main.use('/', require('./routes/token.js'));
 main.use('/', require('./routes/messaging.js'));
 
 db.initialize().then(() => { // initialize database
-    telegram.processUpdates(); // process user registration information once
-    telegram.scheduledJobs.processUpdates.start(); // start user registration processor
-    telegram.scheduledJobs.broadcast.start(); // start broadcasting
+    broadcast.processUpdates(); // process user registration information once
+    broadcast.scheduledJobs.processUpdates.start(); // start user registration processor
+    broadcast.scheduledJobs.broadcast.start(); // start broadcasting
     app.listen(process.env.PORT, (error) => { // start app
         if (error) {
             logger.error(`${process.env.SYS_REF}啟動程序發生異常: ${error}`);

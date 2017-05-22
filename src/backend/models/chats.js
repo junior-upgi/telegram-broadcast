@@ -1,9 +1,21 @@
 module.exports = (sequelize, DataTypes) => {
-    const Users = sequelize.define('users', {
+    const Chats = sequelize.define('chats', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
+        },
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        title: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        username: {
+            type: DataTypes.STRING,
+            allowNull: true
         },
         first_name: {
             type: DataTypes.STRING,
@@ -13,12 +25,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true
         },
-        username: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        language_code: {
-            type: DataTypes.STRING,
+        all_members_are_administrators: {
+            type: DataTypes.BOOLEAN,
             allowNull: true
         },
         update_id: {
@@ -42,9 +50,9 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         name: {
-            singular: 'user',
-            plural: 'users'
+            singular: 'chat',
+            plural: 'chats'
         }
     });
-    return Users;
+    return Chats;
 };

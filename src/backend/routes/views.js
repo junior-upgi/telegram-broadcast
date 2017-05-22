@@ -9,11 +9,4 @@ router.get('/serviceStatus', (request, response) => {
         });
 });
 
-router.get('/regReq', (request, response) => {
-    return response.status(200)
-        .render('regReq', { // render 'serviceStatus.hbs' view
-            title: process.env.SYS_REF // test passing data to rendered template
-        });
-});
-
 module.exports = router;

@@ -6,7 +6,8 @@ import logger from '../utilities/logger.js';
 
 dotenv.config(); // should not be removed
 
-const resetDatabase = process.env.ENV === 'production' ? false : true;
+const resetDatabase = false;
+// const resetDatabase = process.env.ENV === 'production' ? false : true;
 const db = {}; // global database access object
 const sqliteConfig = { // connection object for sqlite database
     dialect: 'sqlite',
@@ -25,12 +26,14 @@ const sqliteConfig = { // connection object for sqlite database
 };
 const sequelize = new Sequelize(sqliteConfig);
 
-db.APISubscriptions = require('./apiSubscriptions.js')(sequelize, Sequelize);
+db.APIUsers = require('./apiUsers.js')(sequelize, Sequelize);
 db.Users = require('./users.js')(sequelize, Sequelize);
+db.Chats = require('./chats.js')(sequelize, Sequelize);
 db.initialize = () => {
     return Promise.all([
-        db.APISubscriptions.sync({ force: resetDatabase }),
-        db.Users.sync({ force: resetDatabase })
+        db.APIUsers.sync({ force: resetDatabase }),
+        db.Users.sync({ force: resetDatabase }),
+        db.Chats.sync({ force: resetDatabase })
     ]);
 };
 
