@@ -30,6 +30,35 @@ const broadcastQueuedMessagesJob = cron.schedule(broadcastFrequency, () => {
                 chat_id: message.chat_id,
                 text: message.text,
                 parse_mode: 'HTML'
+            }).then((message) => {
+                return;
+            }).catch((error) => {
+                if (
+                    ( // if bot was blocked
+                        (error.error_code === 403) &&
+                        (error.description === 'Forbidden: bot was blocked by the user')
+                    ) || ( // chat_id is unavailable for some reason
+                        (error.error_code === 400) &&
+                        (error.description === 'Bad Request: chat not found')
+                    )
+                ) {
+                    logger.error(`${error.error_code}: ${error.description}`);
+                    logger.error(`attempting to remove related user/chat information 【${message.chat_id}】`);
+                    let actionArray = [];
+                    actionArray.push(db.Users.destroy({ where: { id: message.chat_id } }));
+                    actionArray.push(db.Chats.destroy({ where: { id: message.chat_id } }));
+                    db.Sequelize.Promise.all(actionArray)
+                        .then(() => {
+                            return;
+                        }).catch((error) => {
+                            logger.error(`failure to remove related user/chat information 【${message.chat_id}】: ${error}`);
+                            return;
+                        });
+                } else { // other error
+                    logger.error(`broadcasting error: ${error}`);
+                    console.log(JSON.stringify(message, null, '  '));
+                    return;
+                }
             });
         });
     }
@@ -42,39 +71,6 @@ module.exports = {
     },
     processUpdates: processUpdates
 };
-
-// function sendMessage(chat_id, text) {
-//     return new Promise((resolve, reject) => {
-//         axios({
-//             method: 'post',
-//             url: `${botAPIUrl}${process.env.BOT_TOKEN}/sendMessage`,
-//             data: {
-//                 chat_id: chat_id,
-//                 text: text,
-//                 parse_mode: 'HTML'
-//             },
-//             headers: { 'Content-Type': 'application/json' }
-//         }).then((serverResponse) => {
-//             resolve(serverResponse.data);
-//         }).catch((error) => {
-//             let serverErrorResponse = error.response.data;
-//             if (
-//                 (serverErrorResponse.error_code === 403) &&
-//                 (serverErrorResponse.description === 'Forbidden: bot was blocked by the user')
-//             ) {
-//                 console.log('blocked');
-//             } else if (
-//                 (serverErrorResponse.error_code === 400) &&
-//                 (serverErrorResponse.description === 'Bad Request: chat not found')
-//             ) {
-//                 console.log('user not available');
-//             } else {
-//                 console.log(JSON.stringify(serverErrorResponse, null, '  '));
-//             }
-//             reject(error);
-//         });
-//     });
-// }
 
 function processUpdates() {
     let maxUpdateId = null;

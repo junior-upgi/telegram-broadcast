@@ -13,6 +13,8 @@ const router = express.Router();
 router.post('/api/getToken', (request, response) => {
     let loginId = request.body.loginId;
     let password = request.body.password;
+    console.log(loginId);
+    console.log(password);
     if ((!loginId) || (!password)) {
         return response.status(401).json({
             success: false,
@@ -20,16 +22,16 @@ router.post('/api/getToken', (request, response) => {
             message: '401 Forbidden'
         });
     }
-    db.Authorizations.findOne({
+    db.APIUsers.findOne({
         where: { loginId: loginId }
-    }).then((authorizedUser) => {
-        if (authorizedUser === null) { // user not found
+    }).then((apiUser) => {
+        if (apiUser === null) { // user not found
             return db.Sequelize.Promise.reject(`【 ${loginId} 】登入失敗`);
         }
         // password verification
-        logger.info(`${authorizedUser.reference} 提出 jwt 申請`);
-        let currentHash = sha512(password, authorizedUser.salt).passwordHash;
-        if (currentHash === authorizedUser.passwordHash) {
+        logger.info(`${apiUser.reference} 提出 jwt 申請`);
+        let currentHash = sha512(password, apiUser.salt).passwordHash;
+        if (currentHash === apiUser.passwordHash) {
             // hash verified
             let payload = { loginId: loginId };
             return response.status(200).json({
