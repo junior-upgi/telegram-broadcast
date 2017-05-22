@@ -10,7 +10,7 @@ dotenv.config();
 
 const router = express.Router();
 
-router.post('/getToken', (request, response) => {
+router.post('/api/getToken', (request, response) => {
     let loginId = request.body.loginId;
     let password = request.body.password;
     if ((!loginId) || (!password)) {

@@ -34,11 +34,15 @@ router.route('/api/registration')
                 registerAccount(db.APIUsers, reference, loginId, password)
                     .then(() => {
                         regInProcess = false;
-                        return response.status(200).render('regSuc', { title: process.env.SYS_REF });
+                        return response.status(200).render('regSuc', {
+                            title: process.env.SYS_REF
+                        });
                     }).catch((error) => {
                         regInProcess = false;
                         logger.error(`資料庫註冊失敗: ${error}`);
-                        return response.status(500).render('regFail', { title: process.env.SYS_REF });
+                        return response.status(500).render('regFail', {
+                            title: process.env.SYS_REF
+                        });
                     });
             } else {
                 prompt.start();
@@ -89,7 +93,7 @@ function sha512(password, salt) {
 function registerAccount(accountModel, reference, loginId, password) {
     return new Promise((resolve, reject) => {
         let encryptedPasswordData = sha512(password, saltGen(16));
-        accountModel.create({
+        accountModel.upsert({
             reference: reference,
             loginId: loginId,
             passwordHash: encryptedPasswordData.passwordHash,
