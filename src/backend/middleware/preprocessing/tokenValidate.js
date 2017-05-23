@@ -1,12 +1,10 @@
-import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 
-import logger from '../utilities/logger.js';
-
-dotenv.config();
+import eVars from '../../config/environment.js';
+import logger from '../../utilities/logger.js';
 
 module.exports = (request, response, next) => {
-    if (process.env.VALIDATE !== 'enforced') {
+    if (eVars.VALIDATE !== 'enforced') {
         logger.warn('依目前設定系統即將跳過 jsonwebtoken 認證機制(請確認是否正確配置 \'VALIDATE=enforced\')');
         next();
     } else {
@@ -16,7 +14,7 @@ module.exports = (request, response, next) => {
             (request.query && request.query.accessToken) ||
             request.headers['x-access-token'];
         if (accessToken) { // if a token is found
-            jwt.verify(accessToken, process.env.PASS_PHRASE, (error, decodedToken) => {
+            jwt.verify(accessToken, eVars.PASS_PHRASE, (error, decodedToken) => {
                 if (error) {
                     return response.status(401).json({
                         success: false,

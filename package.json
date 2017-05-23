@@ -22,6 +22,7 @@
     "express": "^4.15.3",
     "express-handlebars": "^3.0.0",
     "jsonwebtoken": "^7.4.1",
+    "lodash": "^4.17.4",
     "moment-timezone": "^0.5.13",
     "mssql": "^4.0.4",
     "node-cron": "^1.1.3",

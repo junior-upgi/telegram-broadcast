@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const APIUsers = sequelize.define('apiUsers', {
+    const APISubscribers = sequelize.define('apiSubscribers', {
         reference: {
             type: DataTypes.STRING,
             unique: true,
@@ -34,9 +34,9 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         name: {
-            singular: 'apiUser',
-            plural: 'apiUsers'
+            singular: 'apiSubscriber',
+            plural: 'apiSubscribers'
         }
     });
-    return APIUsers;
+    return APISubscribers;
 };
