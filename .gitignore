@@ -67,3 +67,4 @@ src/backend/config/
 src/frontend/config/
 
 *.db
+!example.db
