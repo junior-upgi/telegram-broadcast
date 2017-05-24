@@ -80,7 +80,7 @@ db.initialize() // initialize database
             main.use('/', require('./routes/utility.js'));
             main.use('/', require('./routes/subscribe.js'));
             main.use('/', require('./routes/token.js'));
-            main.use('/', require('./routes/messages.js'));
+            main.use('/', require('./routes/messages/messages.js'));
 
             // request postprocessing middleware
             main.use(fallThrough); // catch requests that falls through all avail handlers

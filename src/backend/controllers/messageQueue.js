@@ -5,7 +5,8 @@ module.exports = {
     extract: extract,
     extractAll: extractAll,
     length: length,
-    flush: flush
+    flush: flush,
+    viewContents: viewContents
 };
 
 function add(messageString) {
@@ -33,4 +34,9 @@ function length() {
 function flush() {
     messageQueue = [];
     return [];
+}
+
+function viewContents() {
+    let copy = messageQueue.slice();
+    return copy;
 }

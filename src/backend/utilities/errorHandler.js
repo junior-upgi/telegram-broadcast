@@ -46,6 +46,5 @@ function fullErrorHandler(args) {
             errorHandler(args.error);
         }
     }
-    let errorObject = errorObject(args.module, args.function, args.message, args.error);
-    errorHandler(errorObject);
+    errorHandler(errorObject(args.module, args.function, args.message, args.error));
 }
