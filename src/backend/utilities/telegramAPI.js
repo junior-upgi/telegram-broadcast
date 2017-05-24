@@ -93,21 +93,21 @@ function getUpdates(args) {
     });
 }
 
-function sendMessage(args) {
-    return new Promise((resolve, reject) => {
-        axios({
-            method: 'post',
-            url: `${telegramAPIUrl(args.token)}/sendMessage`,
-            data: args,
-            headers: { 'Content-Type': 'application/json' }
-        }).then((serverResponse) => {
-            resolve(serverResponse.data.result);
-        }).catch((error) => {
-            error.response.data.chatObject = args;
-            reject(error.response.data);
-        });
-    });
-}
+// function sendMessage(args) {
+//     return new Promise((resolve, reject) => {
+//         axios({
+//             method: 'post',
+//             url: `${telegramAPIUrl(args.token)}/sendMessage`,
+//             data: args,
+//             headers: { 'Content-Type': 'application/json' }
+//         }).then((serverResponse) => {
+//             resolve(serverResponse.data.result);
+//         }).catch((error) => {
+//             error.response.data.chatObject = args;
+//             reject(error.response.data);
+//         });
+//     });
+// }
 
 function messageObject(chat_id, text) {
     return {

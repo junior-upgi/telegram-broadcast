@@ -141,9 +141,9 @@ module.exports = {
     perform: perform
 };
 
-function registerUser() {
-    telegramAPI.defaultBot.sendMessage(396145285, 'test');
-    telegramAPI.defaultBot.onText(/register/, () => {
-        telegramAPI.defaultBot.sendMessage(396145285, 'test2');
-    });
-}
+// function registerUser() {
+//     telegramAPI.defaultBot.sendMessage(396145285, 'test');
+//     telegramAPI.defaultBot.onText(/register/, () => {
+//         telegramAPI.defaultBot.sendMessage(396145285, 'test2');
+//     });
+// }
