@@ -8,7 +8,7 @@ import messageQueue from './messageQueue.js';
 import telegramAPI from '../utilities/telegramAPI.js';
 
 // set how many messages are processed to broadcast for each cycle
-const PROCESSED_PER_CYCLE = eVars.ENV === 'production' ? 5 : 3;
+const PROCESSED_PER_CYCLE = eVars.ENV === 'production' ? 40 : 10;
 
 module.exports = () => {
     let stagedMessages = null;
