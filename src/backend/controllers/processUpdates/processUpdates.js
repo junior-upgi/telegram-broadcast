@@ -1,3 +1,4 @@
+import Promise from 'bluebird';
 import db from '../database.js';
 import max from 'lodash/max';
 import maxBy from 'lodash/maxBy';
@@ -18,20 +19,16 @@ let lastTrackedUpdateId = null;
 
 // initialize the lastTrackedUpdateId value
 function initialize() {
-    return db.Sequelize.Promise.all([
+    return Promise.all([
         db.Chats.max('update_id'),
         db.Users.max('update_id')
     ]).then((maxValues) => {
         let maxValue = max(maxValues);
-        if (maxValue === undefined) {
-            lastTrackedUpdateId = null;
-        } else {
-            lastTrackedUpdateId = maxValue;
-        }
-        return db.Sequelize.Promise.resolve('processUpdate.js module initialized...');
+        lastTrackedUpdateId = maxValue === undefined ? null : maxValue;
+        return Promise.resolve('processUpdate.js module initialized...');
     }).catch((error) => {
         lastTrackedUpdateId = null;
-        return db.Sequelize.Promise.reject(
+        return Promise.reject(
             errorHandler.object(
                 'processUpdates.js',
                 'initialize()',
@@ -143,3 +140,10 @@ module.exports = {
     initialize: initialize,
     perform: perform
 };
+
+function registerUser() {
+    telegramAPI.defaultBot.sendMessage(396145285, 'test');
+    telegramAPI.defaultBot.onText(/register/, () => {
+        telegramAPI.defaultBot.sendMessage(396145285, 'test2');
+    });
+}

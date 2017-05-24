@@ -1,24 +1,32 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
 import merge from 'lodash/merge';
+import Tgfancy from 'tgfancy';
 
 dotenv.config();
 
 const botAPIUrl = 'https://api.telegram.org/bot';
 const adminId = process.env.TELEGRAM_ID;
-// const adminUsername = process.env.TELEGRAM_USERNAME;
-// const adminName = process.env.TELEGRAM_NAME;
+// const adminUserName = process.env.TELEGRAM_USERNAME;
+// const adminFirstName = process.env.TELEGRAM_FIRST_NAME;
+// const adminLastName = process.env.TELEGRAM_LAST_NAME;
 // const adminMobile = process.env.TELEGRAM_MOBILE;
 const botId = process.env.BOT_ID;
 // const botUsername = process.env.BOT_USERNAME;
 // const botFirstName = process.env.BOT_FIRST_NAME;
 const botToken = process.env.BOT_TOKEN;
 
+const defaultBot = new Tgfancy(botToken, {
+    polling: true,
+    tgfancy: {
+        orderedSending: true
+    }
+});
+
 module.exports = {
-    getMe: getMe,
     getChat: getChat,
     getUpdates: getUpdates,
-    sendMessage: sendMessage,
+    sendMessage: defaultBot.sendMessage,
     messageObject: messageObject,
     admin: {
         id: adminId
@@ -26,7 +34,8 @@ module.exports = {
     bot: {
         id: botId,
         token: botToken
-    }
+    },
+    defaultBot: defaultBot
 };
 
 

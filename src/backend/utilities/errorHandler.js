@@ -1,7 +1,7 @@
 import logger from '../utilities/logger.js';
-import telegramAPI from '../utilities/telegramAPI.js';
 
 import eVars from '../config/environment.js';
+import telegramAPI from '../utilities/telegramAPI.js';
 
 module.exports = {
     handler: errorHandler,
@@ -10,18 +10,19 @@ module.exports = {
     fullHandler: fullErrorHandler
 };
 
-function errorHandler(args) {
+function errorHandler(errorObject) {
+    // console output
     logger.error('error object content');
-    console.log(JSON.stringify(args, null, '  '));
+    console.log(JSON.stringify(errorObject, null, '  '));
+    // admin mobile alert through telegram
     telegramAPI.sendMessage(
-        telegramAPI.messageObject(
-            telegramAPI.admin.id,
-            `${eVars.SYS_REF} encountered error:${'\n'}${JSON.stringify(args, null, '  ')}`
-        )
+        telegramAPI.admin.id,
+        `${eVars.SYS_REF} encountered error:${'\n'}${JSON.stringify(errorObject, null, '  ')}`
     );
     return;
 }
 
+// wrap error information in a standard object
 function errorObject(moduleName, functionName, message, error) {
     return {
         module: moduleName,
@@ -31,6 +32,7 @@ function errorObject(moduleName, functionName, message, error) {
     };
 }
 
+// verify if the error argument is already a prepared error object
 function processed(error) {
     if (error) {
         if ((error.module) && (error.function) && (error.message)) {
@@ -40,6 +42,8 @@ function processed(error) {
     return false;
 }
 
+// check the args.error to see if it's already a prepared error object
+// otherwise handle the error information from scratch
 function fullErrorHandler(args) {
     if (args.error) {
         if ((args.error.module) && (args.error.function) && (args.error.message)) {

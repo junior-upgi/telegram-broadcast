@@ -1,4 +1,5 @@
 import path from 'path';
+import Promise from 'bluebird';
 import Sequelize from 'sequelize';
 
 import errorHandler from '../utilities/errorHandler.js';
@@ -36,12 +37,15 @@ db.Chats = require('../models/chats.js')(sequelize, Sequelize);
 
 db.initialize = () => {
     return Promise.all([
-        db.APISubscribers.sync({ force: RESET_DATABASE })
+        db.APISubscribers
+        .sync({ force: RESET_DATABASE })
         .then(() => {
-            logger.info('APISubscribers sync\'ed...');
-            return db.Sequelize.Promise.resolve();
+            return Promise.resolve({
+                model: 'APISubscribers',
+                status: 'initialized'
+            });
         }).catch((error) => {
-            return db.Sequelize.Promise.reject(
+            return Promise.reject(
                 errorHandler.object(
                     'database.js',
                     'db.APISubscribers.sync()',
@@ -52,10 +56,12 @@ db.initialize = () => {
         }),
         db.Users.sync({ force: RESET_DATABASE })
         .then(() => {
-            logger.info('Users sync\'ed...');
-            return db.Sequelize.Promise.resolve();
+            return Promise.resolve({
+                model: 'Users',
+                status: 'initialized'
+            });
         }).catch((error) => {
-            return db.Sequelize.Promise.reject(
+            return Promise.reject(
                 errorHandler.object(
                     'database.js',
                     'db.Users.sync()',
@@ -66,10 +72,12 @@ db.initialize = () => {
         }),
         db.Chats.sync({ force: RESET_DATABASE })
         .then(() => {
-            logger.info('Chats sync\'ed...');
-            return db.Sequelize.Promise.resolve();
+            return Promise.resolve({
+                model: 'Chats',
+                status: 'initialized'
+            });
         }).catch((error) => {
-            return db.Sequelize.Promise.reject(
+            return Promise.reject(
                 errorHandler.object(
                     'database.js',
                     'db.Chats.sync()',
