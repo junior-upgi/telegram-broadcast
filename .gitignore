@@ -63,8 +63,7 @@ dist/
 public/
 deprecated/
 reference/
-src/backend/config/
-src/frontend/config/
 
 *.db
+*.db-journal
 !example.db
