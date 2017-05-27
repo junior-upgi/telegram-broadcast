@@ -31,7 +31,7 @@ message broadcasting web service to interface with Telegram bot API
 * remember to set 'production' and 'development' correctly in the .env files
 
 # difference between production and development mode
-1. THE DATABASE IS WIPE CLEAN COMPLETELY EVERY TIME THE SERVER RESTART on 'development' mode!!!  if you want to preserve the registration info, set to 'production' mode and backup the "telegramBroadcast.db" file manually
+1. THE DATABASE IS WIPE "COMPLETELY" EVERY TIME THE SERVER RESTART on 'development' mode!!!  if you want to preserve the registration info, set to 'production' mode and backup the "telegramBroadcast.db" file manually
 2. the frequency of updates parsing and broadcast jobs
 3. the amount of verbosity in message output on console
 
@@ -55,7 +55,10 @@ PATCH protocol://hostname:port/SYS_REF/api/subscription - not implemented
 DELETE protocol://hostname:port/SYS_REF/api/subscription - not implemented
 
 GET protocol://hostname:port/SYS_REF/api/messages - not implemented
-POST protocol://hostname:port/SYS_REF/api/messages - submit message to the broadcast queue, also takes username or first_name/last_name as query params
+POST protocol://hostname:port/SYS_REF/api/messages - submit message
+    1. submit message or an array of messages to the broadcast queue
+    2. use chat_id in message object to identify the receiving target
+    3. also takes 'username' or 'first_name/last_name' as query params
 PUT protocol://hostname:port/SYS_REF/api/messages - not implemented
 PATCH protocol://hostname:port/SYS_REF/api/messages - not implemented
 DELETE protocol://hostname:port/SYS_REF/api/messages - not implemented
