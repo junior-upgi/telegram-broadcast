@@ -12,10 +12,7 @@ export class TelegramBot {
         this.pollingOptions = pollingOptions;
     }
 
-    initialize(offset) {
-        if ((offset !== undefined) && (Number.isInteger(offset))) {
-            this.pollingOptions.params.offset = offset;
-        }
+    initialize() {
         return new Promise((resolve, reject) => {
             this.bot = new Tgfancy(this.token, {
                 polling: this.pollingOptions,
