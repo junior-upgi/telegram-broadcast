@@ -2,7 +2,6 @@ import merge from 'lodash/merge';
 import Promise from 'bluebird';
 import Tgfancy from 'tgfancy';
 
-import db from '../controllers/database.js';
 import config from '../config/telegramAPI.js';
 
 export class TelegramBot {
@@ -57,24 +56,39 @@ export class TelegramBot {
         });
     }
 
-    getUpdates(options) {
-        return this.bot.getUpdates();
-    }
-
     name() {
         return this.first_name;
     }
 
+    getId() {
+        return this.id;
+    }
+
+    getUpdates(options) {
+        return this.bot.getUpdates();
+    }
+
+    sendMessage(args) {
+        return this.bot.sendMessage(
+            args.chat_id,
+            args.text,
+            merge(args, {
+                parse_mode: 'HTML'
+            })
+        );
+    }
+    editMessage(args) {
+        return this.bot.editMessageText(args.text, args);
+    }
+
+    // add a event listener to expect a certain mssage to receive a reply
     expectReply(args) {
         return this.bot.onReplyToMessage(args.chat_id, args.message_id, args.callback);
     }
 
+    // remove the listener to message replies
     quitListeningToReply(replyListenerId) {
         return this.bot.removeReplyListener(replyListenerId);
-    }
-
-    editMessage(args) {
-        return this.bot.editMessageText(args.text, args);
     }
 
     observeCommands(args) {
@@ -91,61 +105,18 @@ export class TelegramBot {
         });
     }
 
-    // TODO refactor this to the controllers section
-    observeEvents() {
+    observeEvents(args) {
         return new Promise((resolve, reject) => {
-            // this event is fired when someone joins the group
-            this.bot.on('new_chat_participant', (message) => {
-                if (
-                    (message.chat.type === 'group') &&
-                    (message.new_chat_participant.id === this.id)
-                ) {
-                    db.Chats.upsert(merge(message.chat, { deletedAt: null }))
-                        .then(() => {
-                            this.sendMessage({
-                                chat_id: message.chat.id,
-                                text: `hello, ${this.first_name} is here`
-                            });
-                        }).catch((error) => {
-                            console.log('an error had occured');
-                            console.log(JSON.stringify(error, null, '  '));
-                        });
-                }
-            });
-            // this event is fired when someone leaves or was kicked from the group
-            this.bot.on('left_chat_participant', (message) => {
-                console.log(JSON.stringify(message, null, '  '));
-                if (
-                    (message.chat.type === 'group') &&
-                    (message.left_chat_participant.id === this.id)
-                ) {
-                    db.Chats.destroy({ where: { id: message.chat.id } })
-                        .then(() => {
-                            this.sendMessage({
-                                chat_id: config.masterAccount.id,
-                                text: `${this.first_name} has been removed from ${message.chat.title} group`
-                            });
-                        }).catch((error) => {
-                            console.log('an error had occured');
-                            console.log(JSON.stringify(error, null, '  '));
-                        });
-                }
+            args.forEach((arg) => {
+                this.bot.on(arg.event, (message) => {
+                    arg.messageProcessFunction(message);
+                });
             });
             resolve({
                 success: true,
                 message: 'bot events are observed'
             });
         });
-    }
-
-    sendMessage(args) {
-        return this.bot.sendMessage(
-            args.chat_id,
-            args.text,
-            merge(args, {
-                parse_mode: 'HTML'
-            })
-        );
     }
 }
 

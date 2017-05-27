@@ -21,22 +21,18 @@ module.exports = (message) => {
                 chat_id: chatData.id,
                 text: `you've registered with ${telegram.name()}`
             });
-        }).then((message) => {
-            console.log(JSON.stringify(message, null, '  '));
         }).catch((error) => {
             console.log('could not complete user registration');
             console.log(JSON.stringify(message, null, '  '));
         });
-    } else {
+    } else { // if the command was not issued in a 'private' chat, such as a 'group'
         let reply = {
             chat_id: message.chat.id,
             text: `you can only /register with ${telegram.name()} in a private conversation`,
             reply_to_message_id: message.message_id
         };
         telegram.sendMessage(reply)
-            .then((replyMessage) => {
-                console.log(JSON.stringify(replyMessage, null, '  '));
-            }).catch((error) => {
+            .catch((error) => {
                 console.log(JSON.stringify(error, null, '  '));
             });
     }

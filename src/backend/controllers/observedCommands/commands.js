@@ -1,10 +1,11 @@
 import telegram from '../../utilities/telegramAPI.js';
 import registration from './registration.js';
 
+// chat commands to observe
 const commandList = [{
     reference: 'register',
-    regularExpression: /(^\/start$)|(^\/register$)|(^\/註冊$)/i,
-    messageProcessFunction: registration
+    regularExpression: /(^\/start$)|(^\/register$)|(^\/註冊$)/i, // regular express of the command
+    messageProcessFunction: registration // callback function when the command is issued
 }, {
     reference: 'test',
     regularExpression: /(^\/test$)|(^\/測試$)/i,

@@ -11,6 +11,7 @@ import eVars from './config/environment.js';
 import db from './controllers/database.js';
 import telegram from './utilities/telegramAPI.js';
 import botCommands from './controllers/observedCommands/commands.js';
+import botEvents from './controllers/observedEvents/events.js';
 import broadcastSystem from './controllers/broadcastSystem.js';
 
 // setup Express framework and routing
@@ -64,7 +65,7 @@ initProcedures.push(db.initialize()); // initialize database.js module and data 
 initProcedures.push(telegram.initialize()); // initialize a telegram bot for broadcasting
 initProcedures.push(telegram.polling()); // start Bot polling mechanism
 initProcedures.push(telegram.observeCommands(botCommands)); // load bot commands
-initProcedures.push(telegram.observeEvents()); // load bot events
+initProcedures.push(telegram.observeEvents(botEvents)); // load bot events
 initProcedures.push(broadcastSystem.initialize()); // start broadcasting
 // init each system sequentially
 Promise.each(initProcedures, (initProcedurePromise) => {

@@ -35,7 +35,6 @@ module.exports = (request, response, next) => {
                         });
                         next();
                     } else if ( // if only a single message object is found
-                        (request.body.chat_id !== undefined) &&
                         (request.body.text !== undefined)
                     ) { // set the chat_id
                         request.body.chat_id = result.id;

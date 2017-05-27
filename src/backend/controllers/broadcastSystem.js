@@ -37,9 +37,7 @@ class BroadcastSystem {
                     let sendMessageAction = telegram.sendMessage(currentMessage);
                     performedCycles++;
                     sendMessageAction
-                        .then((sentMessage) => {
-                            // console.log(JSON.stringify(sentMessage, null, '  '));
-                        }).catch((error) => {
+                        .catch((error) => {
                             console.log(JSON.stringify(error, null, '  '));
                             if (blockedOrUnavailable(error)) {
                                 // broadcast failure is caused by unavailability or voluntary user block
@@ -51,8 +49,6 @@ class BroadcastSystem {
                                             chat_id: telegramConfig.masterAccount.id,
                                             text: `${messagePartA} ${messagePartB}`
                                         });
-                                    }).then((sentMessage) => {
-                                        console.log(JSON.stringify(sentMessage, null, '  '));
                                     }).catch((error) => {
                                         console.log('error occured while broadcasting');
                                         console.log(JSON.stringify(error, null, '  '));
