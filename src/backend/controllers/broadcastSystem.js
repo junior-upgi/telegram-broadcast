@@ -4,6 +4,7 @@ import cron from 'node-cron';
 
 import eVars from '../config/environment.js';
 import telegram from '../utilities/telegramAPI.js';
+import { blockedOrUnavailable } from '../utilities/telegramAPI.js';
 import telegramConfig from '../config/telegramAPI.js';
 import db from '../controllers/database.js';
 
@@ -37,12 +38,12 @@ class BroadcastSystem {
                     performedCycles++;
                     sendMessageAction
                         .then((sentMessage) => {
-                            console.log(JSON.stringify(sentMessage, null, '  '));
+                            // console.log(JSON.stringify(sentMessage, null, '  '));
                         }).catch((error) => {
                             console.log(JSON.stringify(error, null, '  '));
-                            if (blockedOrMissing(error)) {
+                            if (blockedOrUnavailable(error)) {
                                 // broadcast failure is caused by unavailability or voluntary user block
-                                unregisterUser(currentMessage.chat_id)
+                                db.unregisterUser(currentMessage.chat_id)
                                     .then(() => {
                                         let messagePartA = `user ${currentMessage.chat_id} HAS BEEN unregistered`;
                                         let messagePartB = 'due to either unavailability or had this bot blocked';
@@ -87,32 +88,3 @@ class BroadcastSystem {
 const broadcastSystem = new BroadcastSystem(MESSAGES_PER_CYCLE, BROADCAST_FREQUENCY);
 
 module.exports = broadcastSystem;
-
-function unregisterUser(id, transactionHandle) {
-    let actionArray = [];
-    // initiate database transcation
-    return db.sequelize.transaction((trx) => {
-        let filter = { where: { id: id }, transaction: trx };
-        // delete user if exist
-        actionArray.push(db.Users.destroy(filter));
-        // delete chat if exist
-        actionArray.push(db.Chats.destroy(filter));
-        return Promise.all(actionArray);
-    });
-}
-
-function blockedOrMissing(error) {
-    if (
-        ( // if bot was blocked
-            (error.response.body.error_code === 403) &&
-            (error.response.body.description === 'Forbidden: bot was blocked by the user')
-        ) || ( // chat_id is unavailable for some reason
-            (error.response.body.error_code === 400) &&
-            (error.response.body.description === 'Bad Request: chat not found')
-        )
-    ) {
-        return true;
-    } else {
-        return false;
-    }
-}

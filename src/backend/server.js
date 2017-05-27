@@ -12,10 +12,6 @@ import db from './controllers/database.js';
 import telegram from './utilities/telegramAPI.js';
 import botCommands from './controllers/observedCommands/commands.js';
 import broadcastSystem from './controllers/broadcastSystem.js';
-// import controller from './controllers/controller.js';
-// import errorHandler from './utilities/errorHandler.js';
-// import logger from './utilities/logger.js';
-// import OutputHandler from './utilities/outputHandler.js';
 
 // setup Express framework and routing
 export let serverStartTime = null; // log server start time
@@ -67,7 +63,8 @@ let initProcedures = [];
 initProcedures.push(db.initialize()); // initialize database.js module and data models
 initProcedures.push(telegram.initialize()); // initialize a telegram bot for broadcasting
 initProcedures.push(telegram.polling()); // start Bot polling mechanism
-initProcedures.push(telegram.observe(botCommands)); // load bot commands
+initProcedures.push(telegram.observeCommands(botCommands)); // load bot commands
+initProcedures.push(telegram.observeEvents()); // load bot events
 initProcedures.push(broadcastSystem.initialize()); // start broadcasting
 // init each system sequentially
 Promise.each(initProcedures, (initProcedurePromise) => {
@@ -77,7 +74,7 @@ Promise.each(initProcedures, (initProcedurePromise) => {
     initProcedureResults.forEach((initProcedureResult) => {
         console.log(initProcedureResult.message);
     });
-    // start server
+    // start node express server
     app.listen(eVars.PORT, (error) => {
         serverStartTime = new Date();
         if (error) {

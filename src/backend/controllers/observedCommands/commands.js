@@ -25,12 +25,17 @@ function testFunction(message) {
 }
 
 function helpFunction(message) {
+    let text =
+        `have you\'ve requested for help???
+
+/register or /註冊
+     register you to this system
+/test or /測試
+     for testing purpose only
+/help or /幫助 /協助
+     this help message`;
     telegram.sendMessage({
         chat_id: message.chat.id,
-        text: 'have you\'ve requested for help???'
-    });
-    telegram.sendMessage({
-        chat_id: message.chat.id,
-        text: '/register or /註冊\n     register you to this system\n/test or /測試\n     for testing purpose only\n/help or /幫助 /協助\n     you are looking at the help page'
+        text: text
     });
 }

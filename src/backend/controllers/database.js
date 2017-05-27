@@ -12,7 +12,8 @@ const sequelize = new Sequelize(config);
 const db = {
     Sequelize: Sequelize,
     sequelize: sequelize,
-    initialize: initialize
+    initialize: initialize,
+    unregisterUser: unregisterUser
 };
 
 function initialize() {
@@ -46,6 +47,17 @@ function initialize() {
                 error: error
             });
         });
+    });
+}
+
+function unregisterUser(id) {
+    // initiate database transcation
+    return db.sequelize.transaction((trx) => {
+        let filter = { where: { id: id }, transaction: trx };
+        return Promise.all([
+            db.Users.destroy(filter), // delete user if exist
+            db.Chats.destroy(filter) // delete chat if exist
+        ]);
     });
 }
 

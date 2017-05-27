@@ -2,6 +2,7 @@ import merge from 'lodash/merge';
 import Promise from 'bluebird';
 import Tgfancy from 'tgfancy';
 
+import db from '../controllers/database.js';
 import config from '../config/telegramAPI.js';
 
 export class TelegramBot {
@@ -79,7 +80,7 @@ export class TelegramBot {
         return this.bot.editMessageText(args.text, args);
     }
 
-    observe(args) {
+    observeCommands(args) {
         return new Promise((resolve, reject) => {
             args.forEach((arg) => {
                 this.bot.onText(arg.regularExpression, (message) => {
@@ -89,6 +90,37 @@ export class TelegramBot {
             resolve({
                 success: true,
                 message: 'bot commands are observed'
+            });
+        });
+    }
+
+    // TODO refactor this to the controllers section
+    observeEvents() {
+        return new Promise((resolve, reject) => {
+            this.bot.on('new_chat_participant', (message) => {
+                if (
+                    (message.chat.type === 'group') &&
+                    (message.new_chat_participant.id === this.id)
+                ) {
+                    db.Chats.upsert(merge(message.chat, { deletedAt: null }));
+                    // TODO has to add .then .catch callbacks
+                    // TODO send message to alert
+                }
+            });
+            this.bot.on('left_chat_participant', (message) => {
+                console.log(JSON.stringify(message, null, '  '));
+                if (
+                    (message.chat.type === 'group') &&
+                    (message.left_chat_participant.id === this.id)
+                ) {
+                    db.Chats.destroy({ where: { id: message.chat.id } });
+                    // TODO has to add .then .catch callbacks
+                    // TODO send message to alert
+                }
+            });
+            resolve({
+                success: true,
+                message: 'bot events are observed'
             });
         });
     }
@@ -108,3 +140,21 @@ export class TelegramBot {
 const defaultBot = new TelegramBot(config.defaultBot.token, config.defaultPollingOptions);
 
 export default defaultBot;
+
+export function blockedOrUnavailable(error) {
+    let errorCode = error.response.body.error_code;
+    let description = error.response.body.description;
+    if (
+        ( // if bot was blocked
+            (errorCode === 403) &&
+            (description === 'Forbidden: bot was blocked by the user')
+        ) || ( // chat_id is unavailable for some reason
+            (errorCode === 400) &&
+            (description === 'Bad Request: chat not found')
+        )
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+}
