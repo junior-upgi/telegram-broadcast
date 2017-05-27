@@ -94,25 +94,41 @@ export class TelegramBot {
     // TODO refactor this to the controllers section
     observeEvents() {
         return new Promise((resolve, reject) => {
+            // this event is fired when someone joins the group
             this.bot.on('new_chat_participant', (message) => {
                 if (
                     (message.chat.type === 'group') &&
                     (message.new_chat_participant.id === this.id)
                 ) {
-                    db.Chats.upsert(merge(message.chat, { deletedAt: null }));
-                    // TODO has to add .then .catch callbacks
-                    // TODO send message to alert
+                    db.Chats.upsert(merge(message.chat, { deletedAt: null }))
+                        .then(() => {
+                            this.sendMessage({
+                                chat_id: message.chat.id,
+                                text: `hello, ${this.first_name} is here`
+                            });
+                        }).catch((error) => {
+                            console.log('an error had occured');
+                            console.log(JSON.stringify(error, null, '  '));
+                        });
                 }
             });
+            // this event is fired when someone leaves or was kicked from the group
             this.bot.on('left_chat_participant', (message) => {
                 console.log(JSON.stringify(message, null, '  '));
                 if (
                     (message.chat.type === 'group') &&
                     (message.left_chat_participant.id === this.id)
                 ) {
-                    db.Chats.destroy({ where: { id: message.chat.id } });
-                    // TODO has to add .then .catch callbacks
-                    // TODO send message to alert
+                    db.Chats.destroy({ where: { id: message.chat.id } })
+                        .then(() => {
+                            this.sendMessage({
+                                chat_id: config.masterAccount.id,
+                                text: `${this.first_name} has been removed from ${message.chat.title} group`
+                            });
+                        }).catch((error) => {
+                            console.log('an error had occured');
+                            console.log(JSON.stringify(error, null, '  '));
+                        });
                 }
             });
             resolve({
@@ -123,7 +139,6 @@ export class TelegramBot {
     }
 
     sendMessage(args) {
-        console.log(args);
         return this.bot.sendMessage(
             args.chat_id,
             args.text,
