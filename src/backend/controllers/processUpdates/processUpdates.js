@@ -25,7 +25,10 @@ function initialize() {
     ]).then((maxValues) => {
         let maxValue = max(maxValues);
         lastTrackedUpdateId = maxValue === undefined ? null : maxValue;
-        return Promise.resolve('processUpdate.js module initialized...');
+        return Promise.resolve({
+            module: 'processUpdate.js',
+            status: 'initialized successfully'
+        });
     }).catch((error) => {
         lastTrackedUpdateId = null;
         return Promise.reject(

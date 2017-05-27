@@ -1,95 +1,52 @@
+import fs from 'fs';
 import path from 'path';
 import Promise from 'bluebird';
-import Sequelize from 'sequelize';
+import Sequelize from 'sequelize'; // requires the sequalize library
 
-import errorHandler from '../utilities/errorHandler.js';
-import logger from '../utilities/logger.js';
-import eVars from '../config/environment.js';
+import config from '../config/database';
 
-// control if the database is recreated at program start
-const RESET_DATABASE = false;
-// const RESET_DATABASE = eVars.ENV === 'production' ? false : true;
+// initialize sequelize database object
+const sequelize = new Sequelize(config);
 
-const db = {}; // global database access object
-
-const SQLITE_CONFIG = { // connection object for sqlite database
-    dialect: 'sqlite',
-    storage: path.join('./', `${eVars.SYS_REF}.db`), // path to database file
-    // timezone: eVars.TIMEZONE, // unsupported by SQLite
-    // control if database operations are output with verbose messages
-    logging: eVars.ENV === 'development' ? logger.info : false,
-    define: {
-        underscored: false,
-        freezeTableName: true,
-        timestamps: true,
-        paranoid: true,
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-        deletedAt: 'deletedAt'
-    }
+// create a global database access object
+const db = {
+    Sequelize: Sequelize,
+    sequelize: sequelize,
+    initialize: initialize
 };
 
-const sequelize = new Sequelize(SQLITE_CONFIG); // initialize database object
-
-db.APISubscribers = require('../models/apiSubscribers.js')(sequelize, Sequelize);
-db.Users = require('../models/users.js')(sequelize, Sequelize);
-db.Chats = require('../models/chats.js')(sequelize, Sequelize);
-
-db.initialize = () => {
-    return Promise.all([
-        db.APISubscribers
-        .sync({ force: RESET_DATABASE })
-        .then(() => {
-            return Promise.resolve({
-                model: 'APISubscribers',
-                status: 'initialized'
+function initialize() {
+    return new Promise((resolve, reject) => {
+        // dynamically load model from models directory
+        let modelPath = path.resolve('./src/backend/models');
+        let modelSyncList = [];
+        fs.readdirSync(modelPath)
+            .filter((fileName) => { // filter out files not named *.js
+                return ((fileName.indexOf('.') !== 0) && (fileName.slice(-3) === '.js'));
+            }).forEach((fileName) => {
+                // prepare the model names from the file names ound
+                let modelName = fileName.slice(0, -3).charAt(0).toUpperCase() + fileName.slice(0, -3).slice(1);
+                // register models dynamically
+                db[modelName] = require(path.join(path.resolve('./src/backend/models'), fileName))(sequelize, Sequelize);
+                // push a model sync function into the array
+                modelSyncList.push(db[modelName].sync({ force: config.resetDatabase }));
+            });
+        // sync the models sequentially
+        Promise.each(modelSyncList, (modalSyncPromise) => {
+            return modalSyncPromise;
+        }).then(() => {
+            resolve({
+                success: true,
+                message: 'system database initialized successfully'
             });
         }).catch((error) => {
-            return Promise.reject(
-                errorHandler.object(
-                    'database.js',
-                    'db.APISubscribers.sync()',
-                    'unable to sync APISubscribers model',
-                    error
-                )
-            );
-        }),
-        db.Users.sync({ force: RESET_DATABASE })
-        .then(() => {
-            return Promise.resolve({
-                model: 'Users',
-                status: 'initialized'
+            reject({
+                success: false,
+                message: 'failed to initialize system database',
+                error: error
             });
-        }).catch((error) => {
-            return Promise.reject(
-                errorHandler.object(
-                    'database.js',
-                    'db.Users.sync()',
-                    'unable to sync Users model',
-                    error
-                )
-            );
-        }),
-        db.Chats.sync({ force: RESET_DATABASE })
-        .then(() => {
-            return Promise.resolve({
-                model: 'Chats',
-                status: 'initialized'
-            });
-        }).catch((error) => {
-            return Promise.reject(
-                errorHandler.object(
-                    'database.js',
-                    'db.Chats.sync()',
-                    'unable to sync Chats model',
-                    error
-                )
-            );
-        })
-    ]);
-};
+        });
+    });
+}
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-module.exports = db;
+module.exports = db; // export the database access object

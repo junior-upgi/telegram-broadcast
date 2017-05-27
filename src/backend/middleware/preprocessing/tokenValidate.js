@@ -1,14 +1,15 @@
 import jwt from 'jsonwebtoken';
 
+import routerResponse from '../../utilities/routerResponse.js';
 import eVars from '../../config/environment.js';
-import logger from '../../utilities/logger.js';
 
 module.exports = (request, response, next) => {
     if (eVars.VALIDATE !== 'enforced') {
-        logger.warn('依目前設定系統即將跳過 jsonwebtoken 認證機制(請確認是否正確配置 \'VALIDATE=enforced\')');
+        console.log('system had been setup to skip token validation');
+        console.log('please confirm if the following are correct');
+        console.log(`VALIDATE=${eVars.VALIDATE}`);
         next();
     } else {
-        logger.info('針對 jsonwebtoken 進行認證');
         let accessToken =
             (request.body && request.body.accessToken) ||
             (request.query && request.query.accessToken) ||
@@ -16,20 +17,23 @@ module.exports = (request, response, next) => {
         if (accessToken) { // if a token is found
             jwt.verify(accessToken, eVars.PASS_PHRASE, (error, decodedToken) => {
                 if (error) {
-                    return response.status(401).json({
+                    return routerResponse.json({
+                        pendingResponse: response,
+                        originalRequest: request,
+                        statusCode: 401,
                         success: false,
-                        data: null,
-                        message: `${response.statusCode} Unauthorized (Unauthorized Token)`
+                        message: `${response.statusCode} Unauthorized (unrecognized token)`
                     });
                 }
-                logger.info('認證通過...');
                 next();
             });
         } else { // if there is no token, return an error
-            return response.status(403).json({
+            return routerResponse.json({
+                pendingResponse: response,
+                originalRequest: request,
+                statusCode: 403,
                 success: false,
-                data: null,
-                message: `${response.statusCode} Forbidden (Lost Token)`
+                message: `${response.statusCode} Forbidden (lost token)`
             });
         }
     }

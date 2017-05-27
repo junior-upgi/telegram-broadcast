@@ -1,41 +1,28 @@
+import Promise from 'bluebird';
 import bodyParser from 'body-parser';
-// import Promise from 'bluebird';
 import cors from 'cors';
 import express from 'express';
 import exphbs from 'express-handlebars';
+import morgan from 'morgan';
 import path from 'path';
 
 // modules
-import db from './controllers/database.js';
-// import controller from './controllers/controller.js';
-import errorHandler from './utilities/errorHandler.js';
 import eVars from './config/environment.js';
-import logger from './utilities/logger.js';
+import db from './controllers/database.js';
+import telegram from './utilities/telegramAPI.js';
+import botCommands from './controllers/observedCommands/commands.js';
+import broadcastSystem from './controllers/broadcastSystem.js';
+// import controller from './controllers/controller.js';
+// import errorHandler from './utilities/errorHandler.js';
+// import logger from './utilities/logger.js';
+// import OutputHandler from './utilities/outputHandler.js';
 
-// middlewares
-// import preset404 from './middleware/preprocessing/preset404.js';
-// import unsupportedMethods from './middleware/preprocessing/unsupportedMethods.js';
-// import fallThrough from './middleware/postprocessing/fallThrough.js';
-// import lastResort from './middleware/postprocessing/lastResort.js';
-
+// setup Express framework and routing
+export let serverStartTime = null; // log server start time
 const app = express(); // init express app
+console.log('loading Express framework...');
 
-export const startTime = new Date();
-
-// allowing cross origin requests
-app.use(cors());
-
-// use body parser middleware
-app.use(bodyParser.urlencoded({ extended: true })); // application/x-www-form-urlencoded
-app.use(bodyParser.json()); // application/json
-
-// init express routing system
-const main = express.Router();
-
-// adds system reference name to the endpoint paths globally
-app.use(`/${eVars.SYS_REF}`, main);
-
-// handlebars templating engine setup
+// Handlebars template engine setup
 app.engine('.hbs', exphbs({
     defaultLayout: 'main',
     extname: '.hbs',
@@ -46,57 +33,60 @@ app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, '/../public'));
 app.set('layouts', path.join(__dirname, '/../public/layouts'));
 app.set('partials', path.join(__dirname, '/../public/partials'));
+console.log('setup Handlebars templating engine...');
 
-db.initialize().then((initResults) => { // initialize database models
-    initResults.forEach((initResult) => {
-        console.log(JSON.stringify(initResult, null, '  '));
+// global routing and middlewares
+const main = express.Router(); // create an express router
+app.use(`/${eVars.SYS_REF}`, main); // adds system reference name to the endpoint paths globally
+main.use(cors()); // allowing cross origin requests
+main.use(morgan('dev')); // for debugging
+main.use(bodyParser.urlencoded({ extended: true })); // application/x-www-form-urlencoded
+main.use(bodyParser.json()); // application/json
+console.log('loading global middlewares...');
+
+// custom request preprocessing middlewares
+main.use(require('./middleware/preprocessing/preset404.js')); // preset all requests as status 404
+main.use(require('./middleware/preprocessing/unsupportedMethods.js')); // catch request using unsupported methods
+console.log('loading custom pre-processing middleware...');
+
+// declaration of routing and endpoint handlers
+main.use('/', require('./routes/utility.js'));
+main.use('/', require('./routes/subscribe.js'));
+main.use('/', require('./routes/token.js'));
+main.use('/', require('./routes/messages/messages.js'));
+console.log('setup routing and end-point handlers...');
+
+// custom request postprocessing middlewares
+main.use(require('./middleware/postprocessing/fallThrough.js')); // catch requests that falls through all avail handlers
+main.use(require('./middleware/postprocessing/lastResort.js')); // last resort
+console.log('loading custom post-processing middleware...');
+
+// initialize different system components
+let initProcedures = [];
+// prepare a list of initialization procedures
+initProcedures.push(db.initialize()); // initialize database.js module and data models
+initProcedures.push(telegram.initialize()); // initialize a telegram bot for broadcasting
+initProcedures.push(telegram.polling()); // start Bot polling mechanism
+initProcedures.push(telegram.observe(botCommands)); // load bot commands
+initProcedures.push(broadcastSystem.initialize()); // start broadcasting
+// init each system sequentially
+Promise.each(initProcedures, (initProcedurePromise) => {
+    return initProcedurePromise;
+}).then((initProcedureResults) => {
+    // display init messages sequentially
+    initProcedureResults.forEach((initProcedureResult) => {
+        console.log(initProcedureResult.message);
     });
-    // initialize processUpdates module
-    // return controller.processUpdates.initialize();
-    // }).then((initMessage) => {
-    // logger.info(initMessage);
-    // process update data for the initial time
-    // return controller.processUpdates.perform();
-    // }).then((updateStatus) => {
-    // logger.info(updateStatus);
-    // start node.js server
+    // start server
     app.listen(eVars.PORT, (error) => {
+        serverStartTime = new Date();
         if (error) {
-            errorHandler.handler(errorHandler.object('server.js', 'app.listen()', `${eVars.SYS_REF} 啟動程序異常`, error));
-            // Promise.reject(
-            //     errorHandler.object(
-            //         'server.js',
-            //         'app.listen()',
-            //         `${eVars.SYS_REF} 啟動程序異常`,
-            //         error
-            //     )
-            // );
+            console.log(`${eVars.SYS_REF} server could not be started...`);
+            console.log(error);
+        } else {
+            console.log(`${eVars.SYS_REF} server has been activated (${eVars.BASE_URL}:${eVars.PORT})...`);
         }
-        // start scheduled jobs
-        // controller.scheduledJobs.processUpdates.start(); // start chat update parsing processor
-        // controller.scheduledJobs.broadcast.start(); // start broadcasting
-
-        // request preprocessing middleware
-        // main.use(preset404);
-        // main.use(unsupportedMethods);
-
-        // routing and endpoint handlers
-        main.use('/', require('./routes/utility.js'));
-        // main.use('/', require('./routes/subscribe.js'));
-        // main.use('/', require('./routes/token.js'));
-        // main.use('/', require('./routes/messages/messages.js'));
-
-        // request postprocessing middleware
-        //     main.use(fallThrough); // catch requests that falls through all avail handlers
-        //     main.use(lastResort); // last resort
-
-        logger.info(`${eVars.SYS_REF} 系統啟動 (${eVars.BASE_URL}:${eVars.PORT})...`);
     });
-}).catch((error) => { // database model init failure
-    errorHandler.fullHandler({
-        module: 'server.js',
-        function: 'db.initialize()',
-        message: `${eVars.SYS_REF} server could not initialize database models`,
-        error: error
-    });
+}).catch((error) => {
+    console.log(JSON.stringify(error, null, '  '));
 });

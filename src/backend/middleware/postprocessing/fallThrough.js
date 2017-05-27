@@ -2,6 +2,7 @@ import routerResponse from '../../utilities/routerResponse.js';
 
 // middleware functions to deal with reqeusts that falls through all available handlers
 module.exports = (request, response, next) => {
+    console.log('CAUGHT BY FELL TRHOUGH');
     if (response.statusCode === 404) {
         return routerResponse.json({
             pendingResponse: response,
