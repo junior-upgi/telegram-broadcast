@@ -1,7 +1,9 @@
 # telegram-broadcast-upgi
-**message broadcasting web service to interface with Telegram bot API**
+
+## message broadcasting web service to interface with Telegram bot API
 
 # description of functionality
+
 1. use sqlite to store registration information
 2. registers and remove users info by interaction
 3. registers and remove chatroom info when invited or removed
@@ -13,6 +15,7 @@
 9. standard operations are operated through a default bot registered by the master accont
 
 # steps to deploy the application
+
 (make sure that node.js(v6.9+) is properly installed)
 1. copy the repository url from github
 2. navigate to proper folder where the project folder will reside
@@ -24,14 +27,18 @@
 8. commandline: "npm install"
 
 # starting the app server
+
 1. navigate to the project root folder
 2. from the commandline, execute the command depending on the mode of execution:
+
 "npm run start:dev:server" (development mode)
 "npm start" (production mode)
+
 * remember to set '**production**' and '**development**' correctly in the .env files
 
 # difference between production and development mode
-* **THE DATABASE IS WIPE "COMPLETELY" EVERY TIME THE SERVER RESTART on 'development' mode!!!**
+
+* **THE DATABASE IS WIPE "COMPLETELY" EVERY TIME THE SERVER RESTART IN 'DEVELOPMENT' MODE!!!**
 1. if you want to preserve the database, set to '**production**' mode and backup the "telegramBroadcast.db" file manually
 2. the frequency of updates parsing and broadcast jobs
 3. the amount of verbosity in message output on console
@@ -74,6 +81,7 @@
 ~~**GET** /telegramBroadcast/api/messages - not implemented~~
 
 **POST** /telegramBroadcast/api/messages - submit message
+
     1. submit message or an array of messages to the broadcast queue
     2. use chat_id in message object to identify the receiving target
     3. also takes 'username' or 'first_name/last_name' as query params
