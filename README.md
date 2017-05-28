@@ -13,7 +13,7 @@
 7. after receiving the token, an outside system will be allowed to access the API
 8. standard operations are operated through a default bot registered by the master accont
 
-# steps to deploy the application
+## steps to deploy the application
 
 (make sure that node.js(v6.9+) is properly installed)
 1. copy the repository url from github
@@ -25,7 +25,7 @@
 7. copy the content from 'example.env' and edit the information accordingly (remove all the comments and watch out for white-spaces!)
 8. commandline: "npm install"
 
-# starting the app server
+## running the app server
 
 1. navigate to the project root folder
 2. from the commandline, execute the command depending on the mode of execution:
@@ -36,14 +36,16 @@
 * remember to set '**production**' and '**development**' correctly in the .env files
 * also take care that the VALIDATION environment variable must say 'enforced', otherwise the system will not check for jwt
 
-# difference between production and development mode
+## difference between 'production' and 'development' mode
 
-* **THE DATABASE IS WIPE "COMPLETELY" EVERY TIME THE SERVER RESTART IN 'DEVELOPMENT' MODE!!!**
-1. if you want to preserve the database, set to '**production**' mode and backup the "telegramBroadcast.db" file manually
+* **THE DATABASE IS WIPE "COMPLETELY" EVERY TIME THE SERVER RESTARTS IN 'DEVELOPMENT' MODE!!!**
+1. if you want to preserve the database, set to '**production**' mode -or- **backup** the "telegramBroadcast.db" file **manually**
 2. the frequency of updates parsing and broadcast jobs
 3. the amount of verbosity in message output on console
 
-# API
+## API
+
+* see the accompanied postman save files for more information
 
 |method|url|purpose|
 |------|---|-------|

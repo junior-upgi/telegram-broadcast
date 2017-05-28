@@ -1,0 +1,229 @@
+{
+	"variables": [],
+	"info": {
+		"name": "telegramBroadcast",
+		"_postman_id": "b2abd9eb-dd6e-8041-4ce6-06b15d5fb8fb",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01 - serviceStatus",
+			"request": {
+				"url": "http://localhost:9009/telegramBroadcast/serviceStatus",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "02 - API access request form",
+			"request": {
+				"url": "http://localhost:9009/telegramBroadcast/api/subscriptions",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"reference\":\"testreference\",\n\t\"loginId\":\"testloginid\",\n\t\"password\":\"testpassword\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "03 - API access info processing",
+			"request": {
+				"url": "http://localhost:9009/telegramBroadcast/api/subscriptions",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "reference",
+							"value": "testReference",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "loginId",
+							"value": "testLoginId",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "password",
+							"value": "testPassword",
+							"type": "text",
+							"enabled": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "04 - get token before accessing API",
+			"request": {
+				"url": "http://localhost:9009/telegramBroadcast/api/getToken",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"loginId\": \"testLoginId\",\n\t\"password\": \"testPassword\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "05 - submit single message",
+			"request": {
+				"url": "http://localhost:9009/telegramBroadcast/api/messages",
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbklkIjoidGVzdExvZ2luSWQiLCJpYXQiOjE0OTU4NjM0MjMsImV4cCI6MTQ5NTk0OTgyM30.WqGc3ywhwEw4MivfH44cmMxF_i7t7we_Qd1roP2Duk8",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"chat_id\": 373228139,\n\t\"text\": \"OH MY GOD!  IT ACTUALLY WORKS!!!\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "06 - submit multiple messages",
+			"request": {
+				"url": "http://localhost:9009/telegramBroadcast/api/messages",
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbklkIjoidGVzdExvZ2luSWQiLCJpYXQiOjE0OTU4NjM0MjMsImV4cCI6MTQ5NTk0OTgyM30.WqGc3ywhwEw4MivfH44cmMxF_i7t7we_Qd1roP2Duk8",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"messages\":[\n\t\t{\n\t\t\t\"chat_id\":396145285,\n\t\t\t\"text\":\"first test message\"\n\t\t},\n\t\t{\n\t\t\t\"chat_id\":373228139,\n\t\t\t\"text\":\"1st test message\"\n\t\t},\n\t\t{\n\t\t\t\"chat_id\":396145285,\n\t\t\t\"text\":\"2nd test message\"\n\t\t},\n\t\t{\n\t\t\t\"chat_id\":396145284,\n\t\t\t\"text\":\"3rd test message\"\n\t\t},\n\t\t{\n\t\t\t\"chat_id\":-246916365,\n\t\t\t\"text\":\"2nd test message\"\n\t\t},\n\t\t{\n\t\t\t\"chat_id\":373228139,\n\t\t\t\"text\":\"3rd test message\"\n\t\t},\n\t\t{\n\t\t\t\"chat_id\":373228139,\n\t\t\t\"text\":\"4th test message\"\n\t\t}\n\t]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "07 - submit message w/ username params",
+			"request": {
+				"url": "http://localhost:9009/telegramBroadcast/api/messages?username=chiayutsaipersonal",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbklkIjoidGVzdExvZ2luSWQiLCJpYXQiOjE0OTU4NjM0MjMsImV4cCI6MTQ5NTk0OTgyM30.WqGc3ywhwEw4MivfH44cmMxF_i7t7we_Qd1roP2Duk8",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"send message with username query params\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "08 - submit messages w/ username params",
+			"request": {
+				"url": "http://localhost:9009/telegramBroadcast/api/messages?username=chiayutsaipersonal",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbklkIjoidGVzdExvZ2luSWQiLCJpYXQiOjE0OTU4NjM0MjMsImV4cCI6MTQ5NTk0OTgyM30.WqGc3ywhwEw4MivfH44cmMxF_i7t7we_Qd1roP2Duk8",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"messages\": [{\n\t\t\"text\": \"message 1 sent with query params\"\n\t},{\n\t\t\"text\": \"message 2 sent with query params\"\n\t},{\n\t\t\"text\": \"message 3 sent with query params\"\n\t}]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "09 - submit message w/ first/last name params copy",
+			"request": {
+				"url": "http://localhost:9009/telegramBroadcast/api/messages?first_name=Chia-Yu&last_name=Tsai",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbklkIjoidGVzdExvZ2luSWQiLCJpYXQiOjE0OTU4NjM0MjMsImV4cCI6MTQ5NTk0OTgyM30.WqGc3ywhwEw4MivfH44cmMxF_i7t7we_Qd1roP2Duk8",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"send message with first/last name query params\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
