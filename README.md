@@ -36,29 +36,29 @@ message broadcasting web service to interface with Telegram bot API
 3. the amount of verbosity in message output on console
 
 # API
-GET protocol://hostname:port/SYS_REF/serviceStatus - web page to check operational status
-POST protocol://hostname:port/SYS_REF/serviceStatus - not implemented
-PUT protocol://hostname:port/SYS_REF/serviceStatus - not implemented
-PATCH protocol://hostname:port/SYS_REF/serviceStatus - not implemented
-DELETE protocol://hostname:port/SYS_REF/serviceStatus - not implemented
+GET protocol://hostname:port/SYS_REF/serviceStatus - webpage to show operational status
+~~POST protocol://hostname:port/SYS_REF/serviceStatus - not implemented~~
+~~PUT protocol://hostname:port/SYS_REF/serviceStatus - not implemented~~
+~~PATCH protocol://hostname:port/SYS_REF/serviceStatus - not implemented~~
+~~DELETE protocol://hostname:port/SYS_REF/serviceStatus - not implemented~~
 
-GET protocol://hostname:port/SYS_REF/api/token - not implemented
-POST protocol://hostname:port/SYS_REF/api/token - verify the registered account and issue jwt
-PUT protocol://hostname:port/SYS_REF/api/token - not implemented
-PATCH protocol://hostname:port/SYS_REF/api/token - not implemented
-DELETE protocol://hostname:port/SYS_REF/api/token - not implemented
+GET protocol://hostname:port/SYS_REF/api/subscription - webpage showing API access request form
+POST protocol://hostname:port/SYS_REF/api/subscription - process API access request
+~~PUT protocol://hostname:port/SYS_REF/api/subscription - not implemented~~
+~~PATCH protocol://hostname:port/SYS_REF/api/subscription - not implemented~~
+~~DELETE protocol://hostname:port/SYS_REF/api/subscription - not implemented~~
 
-GET protocol://hostname:port/SYS_REF/api/subscription - api subscription registration form
-POST protocol://hostname:port/SYS_REF/api/subscription - process registration request
-PUT protocol://hostname:port/SYS_REF/api/subscription - not implemented
-PATCH protocol://hostname:port/SYS_REF/api/subscription - not implemented
-DELETE protocol://hostname:port/SYS_REF/api/subscription - not implemented
+~~GET protocol://hostname:port/SYS_REF/api/token - not implemented~~
+POST protocol://hostname:port/SYS_REF/api/token - account authentication and supply jwt
+~~PUT protocol://hostname:port/SYS_REF/api/token - not implemented~~
+~~PATCH protocol://hostname:port/SYS_REF/api/token - not implemented~~
+~~DELETE protocol://hostname:port/SYS_REF/api/token - not implemented~~
 
-GET protocol://hostname:port/SYS_REF/api/messages - not implemented
+~~GET protocol://hostname:port/SYS_REF/api/messages - not implemented~~
 POST protocol://hostname:port/SYS_REF/api/messages - submit message
     1. submit message or an array of messages to the broadcast queue
     2. use chat_id in message object to identify the receiving target
     3. also takes 'username' or 'first_name/last_name' as query params
-PUT protocol://hostname:port/SYS_REF/api/messages - not implemented
-PATCH protocol://hostname:port/SYS_REF/api/messages - not implemented
-DELETE protocol://hostname:port/SYS_REF/api/messages - not implemented
+~~PUT protocol://hostname:port/SYS_REF/api/messages - not implemented~~
+~~PATCH protocol://hostname:port/SYS_REF/api/messages - not implemented~~
+~~DELETE protocol://hostname:port/SYS_REF/api/messages - not implemented~~
