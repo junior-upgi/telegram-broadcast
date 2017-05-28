@@ -28,37 +28,58 @@
 2. from the commandline, execute the command depending on the mode of execution:
 "npm run start:dev:server" (development mode)
 "npm start" (production mode)
-* remember to set 'production' and 'development' correctly in the .env files
+* remember to set '**production**' and '**development**' correctly in the .env files
 
 # difference between production and development mode
-1. **THE DATABASE IS WIPE "COMPLETELY" EVERY TIME THE SERVER RESTART on 'development' mode!!!**  if you want to preserve the registration info, set to 'production' mode and backup the "telegramBroadcast.db" file manually
+* **THE DATABASE IS WIPE "COMPLETELY" EVERY TIME THE SERVER RESTART on 'development' mode!!!**
+1. if you want to preserve the database, set to '**production**' mode and backup the "telegramBroadcast.db" file manually
 2. the frequency of updates parsing and broadcast jobs
 3. the amount of verbosity in message output on console
 
 # API
+
 **GET** /telegramBroadcast/serviceStatus - webpage to show operational status
+
 ~~**POST** /telegramBroadcast/serviceStatus - not implemented~~
+
 ~~**PUT** /telegramBroadcast/serviceStatus - not implemented~~
+
 ~~**PATCH** /telegramBroadcast/serviceStatus - not implemented~~
+
 ~~**DELETE** /telegramBroadcast/serviceStatus - not implemented~~
 
+
 **GET** /telegramBroadcast/api/subscription - webpage showing API access request form
+
 **POST** /telegramBroadcast/api/subscription - process API access request
+
 ~~**PUT** /telegramBroadcast/api/subscription - not implemented~~
+
 ~~**PATCH** /telegramBroadcast/api/subscription - not implemented~~
+
 ~~**DELETE** /telegramBroadcast/api/subscription - not implemented~~
 
+
 ~~**GET** /telegramBroadcast/api/token - not implemented~~
+
 **POST** /telegramBroadcast/api/token - account authentication and supply jwt
+
 ~~**PUT** /telegramBroadcast/api/token - not implemented~~
+
 ~~**PATCH** /telegramBroadcast/api/token - not implemented~~
+
 ~~**DELETE** /telegramBroadcast/api/token - not implemented~~
 
+
 ~~**GET** /telegramBroadcast/api/messages - not implemented~~
+
 **POST** /telegramBroadcast/api/messages - submit message
     1. submit message or an array of messages to the broadcast queue
     2. use chat_id in message object to identify the receiving target
     3. also takes 'username' or 'first_name/last_name' as query params
+
 ~~**PUT** /telegramBroadcast/api/messages - not implemented~~
+
 ~~**PATCH** /telegramBroadcast/api/messages - not implemented~~
+
 ~~**DELETE** /telegramBroadcast/api/messages - not implemented~~
