@@ -44,14 +44,13 @@
 3. the amount of verbosity in message output on console
 
 # API
-
-```sh
-**GET** /telegramBroadcast/serviceStatus - webpage to show operational status
-~~**POST** /telegramBroadcast/serviceStatus - not implemented~~
-~~**PUT** /telegramBroadcast/serviceStatus - not implemented~~
-~~**PATCH** /telegramBroadcast/serviceStatus - not implemented~~
-~~**DELETE** /telegramBroadcast/serviceStatus - not implemented~~
-```
+|method|url|purpose|
+|------|---|-------|
+| **GET** | /telegramBroadcast/serviceStatus | - webpage to show operational status |
+| ~~**POST** | /telegramBroadcast/serviceStatus | - not implemented~~ |
+| ~~**PUT** | /telegramBroadcast/serviceStatus | - not implemented~~ |
+| ~~**PATCH** | /telegramBroadcast/serviceStatus | - not implemented~~ |
+| ~~**DELETE** | /telegramBroadcast/serviceStatus | - not implemented~~ |
 
 ```sh
 **GET** /telegramBroadcast/api/subscription - webpage showing API access request form
