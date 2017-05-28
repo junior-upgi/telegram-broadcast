@@ -45,41 +45,32 @@
 
 # API
 
+```sh
 **GET** /telegramBroadcast/serviceStatus - webpage to show operational status
-
 ~~**POST** /telegramBroadcast/serviceStatus - not implemented~~
-
 ~~**PUT** /telegramBroadcast/serviceStatus - not implemented~~
-
 ~~**PATCH** /telegramBroadcast/serviceStatus - not implemented~~
-
 ~~**DELETE** /telegramBroadcast/serviceStatus - not implemented~~
+```
 
-
+```sh
 **GET** /telegramBroadcast/api/subscription - webpage showing API access request form
-
 **POST** /telegramBroadcast/api/subscription - process API access request
-
 ~~**PUT** /telegramBroadcast/api/subscription - not implemented~~
-
 ~~**PATCH** /telegramBroadcast/api/subscription - not implemented~~
-
 ~~**DELETE** /telegramBroadcast/api/subscription - not implemented~~
+```
 
-
+```sh
 ~~**GET** /telegramBroadcast/api/token - not implemented~~
-
 **POST** /telegramBroadcast/api/token - account authentication and supply jwt
-
 ~~**PUT** /telegramBroadcast/api/token - not implemented~~
-
 ~~**PATCH** /telegramBroadcast/api/token - not implemented~~
-
 ~~**DELETE** /telegramBroadcast/api/token - not implemented~~
+```
 
-
+```sh
 ~~**GET** /telegramBroadcast/api/messages - not implemented~~
-
 **POST** /telegramBroadcast/api/messages - submit message
 
     1. submit message or an array of messages to the broadcast queue
@@ -87,7 +78,6 @@
     3. also takes 'username' or 'first_name/last_name' as query params
 
 ~~**PUT** /telegramBroadcast/api/messages - not implemented~~
-
 ~~**PATCH** /telegramBroadcast/api/messages - not implemented~~
-
 ~~**DELETE** /telegramBroadcast/api/messages - not implemented~~
+```
