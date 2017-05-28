@@ -1,18 +1,17 @@
 # telegram-broadcast
 
-## message broadcasting web service to interface with Telegram bot API
+**message broadcasting web service to interface with Telegram bot API**
 
-# description of functionality
+## description
 
 1. use sqlite to store registration information
 2. registers and remove users info by interaction
 3. registers and remove chatroom info when invited or removed
-4. register other systems to use this api to send messages through telegram to the registered user or chatrooms
-5. api registration is through console interaction with system admin
-6. after api registration, the system is allowed to apply for web tokens
-7. after receiving the token, an outside system will be allowed to access the api
-8. errors are sent to the master account
-9. standard operations are operated through a default bot registered by the master accont
+4. register other systems to use this API to send messages through telegram to the registered user or chatrooms
+5. API access request is granted by system admin through interaction with the default bot
+6. after API access is granted, the system is allowed to apply for web tokens
+7. after receiving the token, an outside system will be allowed to access the API
+8. standard operations are operated through a default bot registered by the master accont
 
 # steps to deploy the application
 
@@ -35,6 +34,7 @@
 "npm start" (production mode)
 
 * remember to set '**production**' and '**development**' correctly in the .env files
+* also take care that the VALIDATION environment variable must say 'enforced', otherwise the system will not check for jwt
 
 # difference between production and development mode
 
