@@ -59,6 +59,7 @@
             "warn",
             "always"
         ],
+        "linebreak-style": "off",
         "guard-for-in": "off",
         "max-len": "off",
         "new-cap": [
