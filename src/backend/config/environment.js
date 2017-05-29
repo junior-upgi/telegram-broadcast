@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 let eVars = {
-    BASE_URL: process.env.BASE_URL,
+    BASE_URL: process.env.ENV === 'production' ? process.env.PROD_BASE_URL : process.env.DEV_BASE_URL,
     ENV: process.env.ENV,
     PORT: process.env.PORT,
     SYS_REF: process.env.SYS_REF,
