@@ -58,7 +58,7 @@
         "template:watch": "onchange \"src/backend/views/**/*.hbs\" -- npm run \"template:refresh\"",
         "template:service": "run-s template:refresh template:watch",
         "server:remove": "rimraf build && mkdir build",
-        "server:lint": "eslint --color --ext .js src/backend",
+        "server:lint": "eslint --color --output-file eslint.log --ext .js src/backend",
         "server:transpile": "babel src/backend -d build",
         "server:prepare": "run-s server:remove server:lint server:transpile",
         "server:retranspile": "babel -w src/backend -d build",
